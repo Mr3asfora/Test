@@ -1,23 +1,22 @@
 module.exports = {
   success: {
-    text: "تم بنجاح !",
+    text: "success",
     code: 200,
-    errorText: "حدث خطأ ما !",
   },
   fail: {
     code: 404,
-    text: "معلومات غير صحيحة !",
+    text: "fail",
   },
   error: {
     code: 500,
-    text: "حدث خطأ ما !",
+    text: "error",
   },
   bad: {
     code: 400,
-    text: "معلومات غير صحيحة !",
+    text: "bad",
   },
   unAuth: {
     code: 401,
-    text: "غير مصرح !",
+    text: "unAuth",
   },
 };

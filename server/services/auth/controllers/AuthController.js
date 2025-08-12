@@ -1,20 +1,20 @@
-const AsyncHundler = require("./middlewares/AsyncHundler");
+const AsyncHundler = require("../../../middlewares/AsyncHandler");
 
 const { validationResult } = require("express-validator");
 
 const { Op } = require("sequelize");
 
-const genToken = require("../../utils/GenToken");
+const genToken = require("../../../utils/GenToken");
 const bcrypt = require("bcryptjs");
 
-const AppError = require("../../utils/AppError");
+const AppError = require("../../../utils/AppError");
 const {
   success: { text: successText, code: successCode },
   fail: { text: failText, code: failCode },
   bad: { text: badText, code: badCode },
-} = require("../../utils/Status");
+} = require("../../../utils/Status");
 
-const User = require("./User");
+const User = require("../models/User");
 
 const insertNewUser = AsyncHundler(async (req, res, next) => {
   const { name, email, password, rPassword } = req.body;
@@ -86,7 +86,7 @@ const loginUser = AsyncHundler(async (req, res, next) => {
   }
 
   const foundedUser = await User.findOne({
-    attributes: ["Email", "Username", "Password", "isActive"],
+    attributes: ["Id", "Email", "Username", "Password", "isActive"],
     where: { [Op.or]: [{ Email: emOruName }, { Username: emOruName }] },
   });
 
@@ -100,7 +100,9 @@ const loginUser = AsyncHundler(async (req, res, next) => {
     return next(AppError.create(failCode, failText, failText));
   }
 
-  const token = genToken(
+  // refresh token
+
+  const refreshToken = genToken(
     {
       id: foundedUser.Id,
       username: foundedUser.Username,
@@ -110,7 +112,7 @@ const loginUser = AsyncHundler(async (req, res, next) => {
     "10m"
   );
 
-  res.cookie("token", `Bearer ${token}`, {
+  res.cookie("token", `Bearer ${refreshToken}`, {
     httpOnly: true,
     secure: true,
   });
@@ -123,6 +125,23 @@ const loginUser = AsyncHundler(async (req, res, next) => {
       token,
     });
   }
+
+  // access token
+
+  const token = genToken(
+    {
+      id: foundedUser.Id,
+      username: foundedUser.Username,
+      email: foundedUser.Email,
+      role: foundedUser.Role,
+    },
+    "7d"
+  );
+
+  res.cookie("token", `Bearer ${token}`, {
+    httpOnly: true,
+    secure: true,
+  });
 
   res.status(successCode).json({
     code: successCode,

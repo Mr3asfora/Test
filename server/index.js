@@ -23,11 +23,13 @@ app.use(cors(corsCredentials));
 
 const sequelize = require("./databases/SQL/pool");
 
-const authRouter = require("./services/Auth/AuthRouter");
-
 const v1 = "/api/v1";
 
+const authRouter = require("./services/auth/routers/AuthRouter");
+const mailRouter = require("./services/mails/routers/mailRouter");
+
 app.use(`${v1}/auth`, authRouter);
+app.use(`${v1}/mail`, mailRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

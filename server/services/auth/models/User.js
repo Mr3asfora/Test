@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 
-const sequelize = require("../../databases/SQL/pool");
+const sequelize = require("../../../databases/SQL/pool");
 
-const userRoles = require("../../utils/UserRoles");
+const userRoles = require("../../../utils/UserRoles");
 
 const User = sequelize.define("User", {
   Id: {

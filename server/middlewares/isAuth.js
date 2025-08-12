@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const {
   unAuth: { code: unAuthCode, text: unAuthText },
-} = require("../../../utils/Status");
-const AppError = require("../../../utils/AppError");
+} = require("../utils/Status");
+const AppError = require("../utils/AppError");
 
 const isAuth = (req, res, next) => {
   const getToken =
